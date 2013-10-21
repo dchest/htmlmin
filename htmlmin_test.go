@@ -12,7 +12,7 @@ var doc = `<!doctype html>
 </head>
 <body>
    <!-- This is a comment -->
-   <p  class="quoted value">
+   <p  class="quoted value" data-something="x">
      Hello, this is a document.<br/>About
      something.
    </p>
@@ -27,7 +27,7 @@ var doc = `<!doctype html>
 </body>
 </html>`
 
-var miniDoc = `<!doctype html><head><meta charset=utf-8><title>Sample document</title></head><body><p class="quoted value">Hello, this is a document.<br>About
+var miniDoc = `<!doctype html><head><meta charset=utf-8><title>Sample document</title></head><body><p class="quoted value" data-something=x>Hello, this is a document.<br>About
 something.</p><footer>Copyright &copy; Decent People</footer><script>
      (function()
        alert("Please   leave   this   unchanged! Thanks");

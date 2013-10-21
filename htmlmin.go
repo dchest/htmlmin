@@ -54,6 +54,9 @@ func Minify(data []byte) (out []byte, err error) {
 					// Unquoted value.
 					b.Write(v)
 				}
+				if hasAttr {
+					b.WriteByte(' ')
+				}
 			}
 			b.WriteByte('>')
 		case html.EndTagToken:
