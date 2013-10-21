@@ -91,7 +91,7 @@ func isRawTagName(tagName []byte) bool {
 
 func trimTextToken(b []byte) (out []byte) {
 	out = make([]byte, 0)
-	seenSpace := true
+	seenSpace := false
 	for _, c := range b {
 		switch c {
 		case ' ', '\n', '\r', '\t':
@@ -103,9 +103,6 @@ func trimTextToken(b []byte) (out []byte) {
 			out = append(out, c)
 			seenSpace = false
 		}
-	}
-	if len(out) > 1 && seenSpace {
-		out = out[:len(out)-1]
 	}
 	return out
 }
