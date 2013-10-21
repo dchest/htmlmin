@@ -82,7 +82,7 @@ func Minify(data []byte) (out []byte, err error) {
 
 func isRawTagName(tagName []byte) bool {
 	switch string(tagName) {
-	case "script", "pre", "code":
+	case "script", "pre", "code", "textarea":
 		return true
 	default:
 		return false
