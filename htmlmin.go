@@ -48,7 +48,7 @@ func Minify(data []byte) (out []byte, err error) {
 				if quoteChar := valueQuoteChar(v); quoteChar != 0 {
 					// Quoted value.
 					b.WriteByte(quoteChar)
-					b.Write(v)
+					b.WriteString(html.EscapeString(string(v)))
 					b.WriteByte(quoteChar)
 				} else {
 					// Unquoted value.

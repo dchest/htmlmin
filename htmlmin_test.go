@@ -1,7 +1,6 @@
 package htmlmin
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -17,7 +16,7 @@ var doc = `<!doctype html>
      something.
    </p>
    <footer>
-      Copyright &copy;    Decent    People
+	   Copyright &copy;    <A HREF="http://www.example.com/?q=1&amp;m=2">Decent</A>    People
    </footer>
    <script>
      (function()
@@ -39,7 +38,7 @@ Hello, this is a <b>document</b>.<br>About
 something.
 </p>
 <footer>
-Copyright &copy; Decent People
+Copyright &copy; <a href="http://www.example.com/?q=1&amp;m=2">Decent</a> People
 </footer>
 <script>
      (function()
@@ -55,7 +54,6 @@ func TestMinify(t *testing.T) {
 		t.Fatalf("error: %s", err)
 	}
 	if string(result) != miniDoc {
-		t.Errorf("incorrect result of minifying")
+		t.Errorf("incorrect result of minifying\n---\n%s\n---\n", result)
 	}
-	fmt.Printf("---\n%s\n---\n", result)
 }
