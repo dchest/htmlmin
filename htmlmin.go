@@ -40,10 +40,6 @@ func Minify(data []byte) (out []byte, err error) {
 					isFirst = false
 				}
 				b.Write(k)
-				if len(v) == 0 {
-					// Empty attribute values can be skipped.
-					continue
-				}
 				b.WriteByte('=')
 				if quoteChar := valueQuoteChar(v); quoteChar != 0 {
 					// Quoted value.
@@ -108,7 +104,7 @@ func trimTextToken(b []byte) (out []byte) {
 }
 
 func valueQuoteChar(b []byte) byte {
-	if bytes.IndexAny(b, "'`=<> \n\r\t\b") != -1 {
+	if len(b) == 0 || bytes.IndexAny(b, "'`=<> \n\r\t\b") != -1 {
 		return '"' // quote with quote mark
 	}
 	if bytes.IndexByte(b, '"') != -1 {

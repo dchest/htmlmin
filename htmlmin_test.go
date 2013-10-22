@@ -15,6 +15,7 @@ var doc = `<!doctype html>
      Hello, this is a <b>document</b>.<br/>About
      something.
    </p>
+   <img alt="" width="100">
    <footer>
 	   Copyright &copy;    <A HREF="http://www.example.com/?q=1&amp;m=2">Decent</A>    People
    </footer>
@@ -37,6 +38,7 @@ var miniDoc = `<!doctype html>
 Hello, this is a <b>document</b>.<br>About
 something.
 </p>
+<img alt="" width=100>
 <footer>
 Copyright &copy; <a href="http://www.example.com/?q=1&amp;m=2">Decent</a> People
 </footer>
