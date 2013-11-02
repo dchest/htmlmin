@@ -10,15 +10,23 @@ import (
 	"io"
 
 	"code.google.com/p/go.net/html"
+	"github.com/dchest/cssmin"
 	"github.com/dchest/jsmin"
 )
 
 type Options struct {
 	MinifyScripts bool // if true, use jsmin to minify contents of script tags.
+	MinifyStyles  bool // if true, use cssmin to minify contents of style tags and inline styles.
 }
 
 var DefaultOptions = &Options{
 	MinifyScripts: false,
+	MinifyStyles:  false,
+}
+
+var FullOptions = &Options{
+	MinifyScripts: true,
+	MinifyStyles:  true,
 }
 
 // Minify returns minified version of the given HTML data.
@@ -31,6 +39,7 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 	z := html.NewTokenizer(bytes.NewReader(data))
 	raw := false
 	javascript := false
+	style := false
 	for {
 		tt := z.Next()
 		switch tt {
@@ -42,9 +51,17 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 			return nil, err
 		case html.StartTagToken, html.SelfClosingTagToken:
 			tagName, hasAttr := z.TagName()
-			raw = isRawTagName(tagName)
-			if string(tagName) == "script" {
+			switch string(tagName) {
+			case "script":
 				javascript = true
+				raw = true
+			case "style":
+				style = true
+				raw = true
+			case "pre", "code", "textarea":
+				raw = true
+			default:
+				raw = false
 			}
 			b.WriteByte('<')
 			b.Write(tagName)
@@ -54,6 +71,11 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 				k, v, hasAttr = z.TagAttr()
 				if javascript && string(k) == "type" && string(v) != "text/javascript" {
 					javascript = false
+				}
+				if string(k) == "style" && options.MinifyStyles {
+					v = []byte("a{" + string(v) + "}") // simulate "full" CSS
+					v = cssmin.Minify(v)
+					v = v[2:len(v)-1] // strip simulation
 				}
 				if isFirst {
 					b.WriteByte(' ')
@@ -81,6 +103,9 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 			if javascript && string(tagName) == "script" {
 				javascript = false
 			}
+			if style && string(tagName) == "style" {
+				style = false
+			}
 			b.Write([]byte("</"))
 			b.Write(tagName)
 			b.WriteByte('>')
@@ -95,6 +120,8 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 				} else {
 					b.Write(min)
 				}
+			} else if style && options.MinifyStyles {
+				b.Write(cssmin.Minify(z.Raw()))
 			} else if raw {
 				b.Write(z.Raw())
 			} else {
@@ -104,15 +131,6 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 			b.Write(z.Raw())
 		}
 
-	}
-}
-
-func isRawTagName(tagName []byte) bool {
-	switch string(tagName) {
-	case "script", "pre", "code", "textarea":
-		return true
-	default:
-		return false
 	}
 }
 

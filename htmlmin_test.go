@@ -8,6 +8,11 @@ var doc = `<!doctype html>
 <head>
   <meta charset="utf-8">
   <title>Sample document</title>
+  <style>
+  body {
+	  color: #cccccc;
+  }
+  </style>
 </head>
 <body>
    <!-- This is a comment -->
@@ -15,7 +20,7 @@ var doc = `<!doctype html>
      Hello, this is a <b>document</b>.<br/>About
      something.
    </p>
-   <img alt="" width="100">
+   <img alt="" width="100" style="color: #aaaaaa; padding: 0px;">
    <footer>
 	   Copyright &copy;    <A HREF="http://www.example.com/?q=1&amp;m=2">Decent</A>    People
    </footer>
@@ -31,6 +36,11 @@ var miniDoc = `<!doctype html>
 <head>
 <meta charset=utf-8>
 <title>Sample document</title>
+<style>
+  body {
+	  color: #cccccc;
+  }
+  </style>
 </head>
 <body>
 
@@ -38,7 +48,7 @@ var miniDoc = `<!doctype html>
 Hello, this is a <b>document</b>.<br>About
 something.
 </p>
-<img alt="" width=100>
+<img alt="" width=100 style="color: #aaaaaa; padding: 0px;">
 <footer>
 Copyright &copy; <a href="http://www.example.com/?q=1&amp;m=2">Decent</a> People
 </footer>
@@ -50,10 +60,11 @@ Copyright &copy; <a href="http://www.example.com/?q=1&amp;m=2">Decent</a> People
 </body>
 </html>`
 
-var miniDocJS = `<!doctype html>
+var miniDocFull = `<!doctype html>
 <head>
 <meta charset=utf-8>
 <title>Sample document</title>
+<style>body{color:#ccc}</style>
 </head>
 <body>
 
@@ -61,7 +72,7 @@ var miniDocJS = `<!doctype html>
 Hello, this is a <b>document</b>.<br>About
 something.
 </p>
-<img alt="" width=100>
+<img alt="" width=100 style=color:#aaa;padding:0>
 <footer>
 Copyright &copy; <a href="http://www.example.com/?q=1&amp;m=2">Decent</a> People
 </footer>
@@ -79,11 +90,11 @@ func TestMinify(t *testing.T) {
 		t.Errorf("1. incorrect result of minifying\n---\n%s\n---\n", result)
 	}
 
-	result, err = Minify([]byte(doc), &Options{MinifyScripts: true})
+	result, err = Minify([]byte(doc), FullOptions)
 	if err != nil {
 		t.Fatalf("error: %s", err)
 	}
-	if string(result) != miniDocJS {
+	if string(result) != miniDocFull {
 		t.Errorf("2. incorrect result of minifying\n---\n%s\n---\n", result)
 	}
 }
