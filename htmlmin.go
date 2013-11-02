@@ -10,13 +10,27 @@ import (
 	"io"
 
 	"code.google.com/p/go.net/html"
+	"github.com/dchest/jsmin"
 )
 
+type Options struct {
+	MinifyScripts bool // if true, use jsmin to minify contents of script tags.
+}
+
+var DefaultOptions = &Options{
+	MinifyScripts: false,
+}
+
 // Minify returns minified version of the given HTML data.
-func Minify(data []byte) (out []byte, err error) {
+// If passed options is nil, uses default options.
+func Minify(data []byte, options *Options) (out []byte, err error) {
+	if options == nil {
+		options = DefaultOptions
+	}
 	var b bytes.Buffer
 	z := html.NewTokenizer(bytes.NewReader(data))
 	raw := false
+	javascript := false
 	for {
 		tt := z.Next()
 		switch tt {
@@ -29,12 +43,18 @@ func Minify(data []byte) (out []byte, err error) {
 		case html.StartTagToken, html.SelfClosingTagToken:
 			tagName, hasAttr := z.TagName()
 			raw = isRawTagName(tagName)
+			if string(tagName) == "script" {
+				javascript = true
+			}
 			b.WriteByte('<')
 			b.Write(tagName)
 			var k, v []byte
 			isFirst := true
 			for hasAttr {
 				k, v, hasAttr = z.TagAttr()
+				if javascript && string(k) == "type" && string(v) != "text/javascript" {
+					javascript = false
+				}
 				if isFirst {
 					b.WriteByte(' ')
 					isFirst = false
@@ -58,13 +78,24 @@ func Minify(data []byte) (out []byte, err error) {
 		case html.EndTagToken:
 			tagName, _ := z.TagName()
 			raw = false
+			if javascript && string(tagName) == "script" {
+				javascript = false
+			}
 			b.Write([]byte("</"))
 			b.Write(tagName)
 			b.WriteByte('>')
 		case html.CommentToken:
 			// skip
 		case html.TextToken:
-			if raw {
+			if javascript && options.MinifyScripts {
+				min, err := jsmin.Minify(z.Raw())
+				if err != nil {
+					// Just write it as is.
+					b.Write(z.Raw())
+				} else {
+					b.Write(min)
+				}
+			} else if raw {
 				b.Write(z.Raw())
 			} else {
 				b.Write(trimTextToken(z.Raw()))
