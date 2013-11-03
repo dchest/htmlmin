@@ -5,6 +5,7 @@ import (
 )
 
 var doc = `<!doctype html>
+<!--[if lt IE 7]><html class="ie6"><![endif]-->
 <head>
   <meta charset="utf-8">
   <title>Sample document</title>
@@ -33,6 +34,7 @@ var doc = `<!doctype html>
 </html>`
 
 var miniDoc = `<!doctype html>
+<!--[if lt IE 7]><html class="ie6"><![endif]-->
 <head>
 <meta charset=utf-8>
 <title>Sample document</title>
@@ -61,6 +63,7 @@ Copyright &copy; <a href="http://www.example.com/?q=1&amp;m=2">Decent</a> People
 </html>`
 
 var miniDocFull = `<!doctype html>
+<!--[if lt IE 7]><html class="ie6"><![endif]-->
 <head>
 <meta charset=utf-8>
 <title>Sample document</title>

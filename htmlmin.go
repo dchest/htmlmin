@@ -110,7 +110,11 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 			b.Write(tagName)
 			b.WriteByte('>')
 		case html.CommentToken:
-			// skip
+			if bytes.Contains(z.Raw(), []byte("<!--[if")) {
+				// IE conditional comment, preserve.
+				b.Write(z.Raw())
+			}
+			// ... otherwise, skip.
 		case html.TextToken:
 			if javascript && options.MinifyScripts {
 				min, err := jsmin.Minify(z.Raw())
