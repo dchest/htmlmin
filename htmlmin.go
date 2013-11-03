@@ -75,7 +75,7 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 				if string(k) == "style" && options.MinifyStyles {
 					v = []byte("a{" + string(v) + "}") // simulate "full" CSS
 					v = cssmin.Minify(v)
-					v = v[2:len(v)-1] // strip simulation
+					v = v[2 : len(v)-1] // strip simulation
 				}
 				if isFirst {
 					b.WriteByte(' ')
