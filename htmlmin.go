@@ -110,8 +110,9 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 			b.Write(tagName)
 			b.WriteByte('>')
 		case html.CommentToken:
-			if bytes.Contains(z.Raw(), []byte("<!--[if")) {
-				// IE conditional comment, preserve.
+			if bytes.HasPrefix(z.Raw(), []byte("<!--[if")) ||
+			   bytes.HasPrefix(z.Raw(), []byte("<!--//")) {
+				// Preserve IE conditional and special style comments.
 				b.Write(z.Raw())
 			}
 			// ... otherwise, skip.
