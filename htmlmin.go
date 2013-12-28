@@ -37,7 +37,7 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 	}
 	var b bytes.Buffer
 	z := html.NewTokenizer(bytes.NewReader(data))
-	raw := false
+	raw := 0
 	javascript := false
 	style := false
 	for {
@@ -54,14 +54,12 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 			switch string(tagName) {
 			case "script":
 				javascript = true
-				raw = true
+				raw++
 			case "style":
 				style = true
-				raw = true
+				raw++
 			case "pre", "code", "textarea":
-				raw = true
-			default:
-				raw = false
+				raw++
 			}
 			b.WriteByte('<')
 			b.Write(tagName)
@@ -99,19 +97,22 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 			b.WriteByte('>')
 		case html.EndTagToken:
 			tagName, _ := z.TagName()
-			raw = false
-			if javascript && string(tagName) == "script" {
+			switch string(tagName) {
+			case "script":
 				javascript = false
-			}
-			if style && string(tagName) == "style" {
+				raw--
+			case "style":
 				style = false
+				raw--
+			case "pre", "code", "textarea":
+				raw--
 			}
 			b.Write([]byte("</"))
 			b.Write(tagName)
 			b.WriteByte('>')
 		case html.CommentToken:
 			if bytes.HasPrefix(z.Raw(), []byte("<!--[if")) ||
-			   bytes.HasPrefix(z.Raw(), []byte("<!--//")) {
+				bytes.HasPrefix(z.Raw(), []byte("<!--//")) {
 				// Preserve IE conditional and special style comments.
 				b.Write(z.Raw())
 			}
@@ -127,7 +128,7 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 				}
 			} else if style && options.MinifyStyles {
 				b.Write(cssmin.Minify(z.Raw()))
-			} else if raw {
+			} else if raw > 0 {
 				b.Write(z.Raw())
 			} else {
 				b.Write(trimTextToken(z.Raw()))
