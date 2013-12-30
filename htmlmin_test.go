@@ -10,6 +10,7 @@ var doc = `<!doctype html>
 <!--[if lt IE 7]><html class="ie6"><![endif]-->
 <head>
   <meta charset="utf-8">
+  <meta name='description' content='Contains "quote"'>
   <title>Sample document</title>
   <style>
   body {
@@ -43,7 +44,8 @@ var doc = `<!doctype html>
 var miniDoc = `<!doctype html>
 <!--[if lt IE 7]><html class="ie6"><![endif]-->
 <head>
-<meta charset=utf-8>
+<meta charset="utf-8">
+<meta name="description" content="Contains &#34;quote&#34;">
 <title>Sample document</title>
 <style>
   body {
@@ -53,7 +55,7 @@ var miniDoc = `<!doctype html>
 </head>
 <body>
 
-<p class="quoted value" data-something=x>
+<p class="quoted value" data-something="x">
 Hello, this is a <b>document</b>.<br>About
 something.
 </p>
@@ -62,7 +64,7 @@ something.
 
    Nice.
    </code></pre>
-<img alt="" width=100 style="color: #aaaaaa; padding: 0px;">
+<img alt="" width="100" style="color: #aaaaaa; padding: 0px;">
 <footer>
 Copyright &copy; <a href="http://www.example.com/?q=1&amp;m=2">Decent</a> People
 </footer>
@@ -78,6 +80,7 @@ var miniDocFull = `<!doctype html>
 <!--[if lt IE 7]><html class="ie6"><![endif]-->
 <head>
 <meta charset=utf-8>
+<meta name=description content="Contains &#34;quote&#34;">
 <title>Sample document</title>
 <style>body{color:#ccc}</style>
 </head>
@@ -114,7 +117,7 @@ func TestMinify(t *testing.T) {
 		diffLines(t, miniDoc, string(result))
 	}
 
-	result, err = Minify([]byte(doc), FullOptions)
+	result, err = Minify([]byte(doc), &Options{true, true, true})
 	if err != nil {
 		t.Fatalf("error: %s", err)
 	}

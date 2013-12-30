@@ -17,16 +17,13 @@ import (
 type Options struct {
 	MinifyScripts bool // if true, use jsmin to minify contents of script tags.
 	MinifyStyles  bool // if true, use cssmin to minify contents of style tags and inline styles.
+	UnquoteAttrs  bool // if true, remove quotes from HTML attributes where possible.
 }
 
 var DefaultOptions = &Options{
 	MinifyScripts: false,
 	MinifyStyles:  false,
-}
-
-var FullOptions = &Options{
-	MinifyScripts: true,
-	MinifyStyles:  true,
+	UnquoteAttrs:  false,
 }
 
 // Minify returns minified version of the given HTML data.
@@ -81,14 +78,15 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 				}
 				b.Write(k)
 				b.WriteByte('=')
-				if quoteChar := valueQuoteChar(v); quoteChar != 0 {
+				qv := html.EscapeString(string(v))
+				if !options.UnquoteAttrs || shouldQuote(v) {
 					// Quoted value.
-					b.WriteByte(quoteChar)
-					b.WriteString(html.EscapeString(string(v)))
-					b.WriteByte(quoteChar)
+					b.WriteByte('"')
+					b.WriteString(qv)
+					b.WriteByte('"')
 				} else {
 					// Unquoted value.
-					b.Write(v)
+					b.WriteString(qv)
 				}
 				if hasAttr {
 					b.WriteByte(' ')
@@ -158,12 +156,9 @@ func trimTextToken(b []byte) (out []byte) {
 	return out
 }
 
-func valueQuoteChar(b []byte) byte {
-	if len(b) == 0 || bytes.IndexAny(b, "'`=<> \n\r\t\b") != -1 {
-		return '"' // quote with quote mark
+func shouldQuote(b []byte) bool {
+	if len(b) == 0 || bytes.IndexAny(b, "\"'`=<> \n\r\t\b") != -1 {
+		return true
 	}
-	if bytes.IndexByte(b, '"') != -1 {
-		return '\'' // quote with apostrophe
-	}
-	return 0 // do not quote
+	return false
 }
