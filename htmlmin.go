@@ -9,7 +9,7 @@ import (
 	"bytes"
 	"io"
 
-	"code.google.com/p/go.net/html"
+	"golang.org/x/net/html"
 	"github.com/dchest/cssmin"
 	"github.com/dchest/jsmin"
 )
