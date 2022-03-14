@@ -30,6 +30,7 @@ var doc = `<!doctype html>
    Nice.
    </code></pre>
    <img alt="" width="100" style="color: #aaaaaa; padding: 0px;">
+   <input type=text required>
    <footer>
 	   Copyright &copy;    <A HREF="http://www.example.com/?q=1&amp;m=2">Decent</A>    People
    </footer>
@@ -65,6 +66,7 @@ something.
    Nice.
    </code></pre>
 <img alt="" width="100" style="color: #aaaaaa; padding: 0px;">
+<input type="text" required>
 <footer>
 Copyright &copy; <a href="http://www.example.com/?q=1&amp;m=2">Decent</a> People
 </footer>
@@ -96,6 +98,7 @@ something.
    Nice.
    </code></pre>
 <img alt="" width=100 style=color:#aaa;padding:0>
+<input type=text required>
 <footer>
 Copyright &copy; <a href="http://www.example.com/?q=1&amp;m=2">Decent</a> People
 </footer>

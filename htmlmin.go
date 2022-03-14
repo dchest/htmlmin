@@ -9,9 +9,9 @@ import (
 	"bytes"
 	"io"
 
-	"golang.org/x/net/html"
 	"github.com/dchest/cssmin"
 	"github.com/dchest/jsmin"
+	"golang.org/x/net/html"
 )
 
 type Options struct {
@@ -77,16 +77,18 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 					isFirst = false
 				}
 				b.Write(k)
-				b.WriteByte('=')
-				qv := html.EscapeString(string(v))
-				if !options.UnquoteAttrs || shouldQuote(v) {
-					// Quoted value.
-					b.WriteByte('"')
-					b.WriteString(qv)
-					b.WriteByte('"')
-				} else {
-					// Unquoted value.
-					b.WriteString(qv)
+				if len(v) > 0 || isAlt(k) {
+					b.WriteByte('=')
+					qv := html.EscapeString(string(v))
+					if !options.UnquoteAttrs || shouldQuote(v) {
+						// Quoted value.
+						b.WriteByte('"')
+						b.WriteString(qv)
+						b.WriteByte('"')
+					} else {
+						// Unquoted value.
+						b.WriteString(qv)
+					}
 				}
 				if hasAttr {
 					b.WriteByte(' ')
@@ -136,6 +138,10 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 		}
 
 	}
+}
+
+func isAlt(v []byte) bool {
+	return len(v) == 3 && v[0] == 'a' && v[1] == 'l' && v[2] == 't'
 }
 
 func trimTextToken(b []byte) (out []byte) {
