@@ -30,6 +30,7 @@ var doc = `<!doctype html>
    Nice.
    </code></pre>
    <img alt="" width="100" style="color: #aaaaaa; padding: 0px;">
+   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
    <input type=text required>
    <footer>
 	   Copyright &copy;    <A HREF="http://www.example.com/?q=1&amp;m=2">Decent</A>    People
@@ -66,6 +67,7 @@ something.
    Nice.
    </code></pre>
 <img alt="" width="100" style="color: #aaaaaa; padding: 0px;">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
 <input type="text" required>
 <footer>
 Copyright &copy; <a href="http://www.example.com/?q=1&amp;m=2">Decent</a> People
@@ -98,6 +100,7 @@ something.
    Nice.
    </code></pre>
 <img alt="" width=100 style=color:#aaa;padding:0>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-external-link"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
 <input type=text required>
 <footer>
 Copyright &copy; <a href="http://www.example.com/?q=1&amp;m=2">Decent</a> People

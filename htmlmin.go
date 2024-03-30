@@ -37,6 +37,7 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 	raw := 0
 	javascript := false
 	style := false
+	svg := false
 	for {
 		tt := z.Next()
 		switch tt {
@@ -55,8 +56,15 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 			case "style":
 				style = true
 				raw++
+			case "svg":
+				svg = true
+				raw++
 			case "pre", "code", "textarea":
 				raw++
+			}
+			if svg {
+				b.Write(z.Raw())
+				continue
 			}
 			b.WriteByte('<')
 			b.Write(tagName)
@@ -103,6 +111,9 @@ func Minify(data []byte, options *Options) (out []byte, err error) {
 				raw--
 			case "style":
 				style = false
+				raw--
+			case "svg":
+				svg = false
 				raw--
 			case "pre", "code", "textarea":
 				raw--
